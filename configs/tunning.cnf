@@ -7,7 +7,7 @@
 # https://www.percona.com/blog/2014/11/14/optimizing-mysql-zabbix/
 
 [mysqld]
-max_allowed_packet = 16
+max_allowed_packet = 64MB
 
 # Sort buffer is used to perform sorts for some ORDER BY and GROUP BY
 # queries. If sorted data does not fit into the sort buffer, a disk
