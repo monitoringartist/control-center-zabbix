@@ -1,0 +1,261 @@
+{
+   "ID": "",
+   "Name": "Zabbix",
+   "Version": "2.4",
+   "Description": "Zabbix 2.4 / customized by www.monitoringartist.com",
+   "Services": [
+     {
+       "Name": "Zabbix",
+       "Title": "Zabbix",
+       "Version": "2.4",
+       "Command": "/zabbix-server-2.4.sh",
+       "Description": "Zabbix 2.4 / customized by www.monitoringartist.com",
+       "Tags": [
+         "daemon"
+       ],
+       "ImageID": "multiplay/zabbix-server-2.4",
+       "Instances": {
+         "Min": 1,
+         "Max": 1,
+         "Default": 0
+       },
+       "ChangeOptions": null,
+       "Launch": "auto",
+       "HostPolicy": "",
+       "Hostname": "",
+       "Privileged": false,
+       "ConfigFiles": {
+         "/zabbix-server-2.4.sh": {
+           "Filename": "/zabbix-server-2.4.sh",
+           "Owner": "root:root",
+           "Permissions": "0775",
+           "Content": "export ZS_DBHost=127.0.0.1\nexport ZS_DBUser={{(getContext . \"MARIADB_USER\")}}\nexport ZS_DBPassword={{(getContext . \"MARIADB_PASS\")}}\n. /config/bootstrap.sh\n"
+         },
+         "/usr/local/src/zabbix/frontends/php/conf/zabbix.conf.php": {
+           "Filename": "/usr/local/src/zabbix/frontends/php/conf/zabbix.conf.php",
+           "Owner": "root:root",
+           "Permissions": "0775",
+           "Content": "<?php\n// Zabbix GUI configuration file\nglobal $DB;\n\n$DB['TYPE']     = 'MYSQL';\n$DB['SERVER']   = '127.0.0.1';\n$DB['PORT']     = '3306';\n$DB['DATABASE'] = 'zabbix';\n$DB['USER']     = '{{(getContext . \"MARIADB_USER\")}}';\n$DB['PASSWORD'] = '{{(getContext . \"MARIADB_PASS\")}}';\n\n// SCHEMA is relevant only for IBM_DB2 database\n$DB['SCHEMA'] = '';\n\n$ZBX_SERVER      = 'localhost';\n$ZBX_SERVER_PORT = '10051';\n$ZBX_SERVER_NAME = 'Zabbix Server';\n\n$IMAGE_FORMAT_DEFAULT = IMAGE_FORMAT_PNG;\n?>\n\n"
+         },                               
+         "/usr/local/etc/zabbix_server.conf": {
+           "Filename": "/usr/local/etc/zabbix_server.conf",
+           "Owner": "root:root",
+           "Permissions": "644",
+           "Content": "################################################################################\n#\n# Jan Garaj www.monitoringartist.com\n#\n################################################################################\n\n# This is a configuration file for Zabbix Server process\n# To get more information about Zabbix,\n# visit http://www.zabbix.com\n\n############ GENERAL PARAMETERS #################\n\n### Option: ListenPort\n#       Listen port for trapper.\n#\n# Mandatory: no\n# Range: 1024-32767\n# Default:\n# ListenPort=10051\n\n### Option: SourceIP\n#       Source IP address for outgoing connections.\n#\n# Mandatory: no\n# Default:\n# SourceIP=\n\n### Option: LogFile\n#       Name of log file.\n#       If not set, syslog is used.\n#\n# Mandatory: no\n# Default:\n# LogFile=\nLogFile=/var/log/zabbix/zabbix_server.log\n\n### Option: LogFileSize\n#       Maximum size of log file in MB.\n#       0 - disable automatic log rotation.\n#\n# Mandatory: no\n# Range: 0-1024\n# Default:\n# LogFileSize=1\n\n### Option: DebugLevel\n#       Specifies debug level\n#       0 - basic information about starting and stopping of Zabbix processes\n#       1 - critical information\n#       2 - error information\n#       3 - warnings\n#       4 - for debugging (produces lots of information)\n#\n# Mandatory: no\n# Range: 0-4\n# Default:\n# DebugLevel=3\n\n### Option: PidFile\n#       Name of PID file.\n#\n# Mandatory: no\n# Default:\n# PidFile=/tmp/zabbix_server.pid\n\n### Option: DBHost\n#       Database host name.\n#       If set to localhost, socket is used for MySQL.\n#       If set to empty string, socket is used for PostgreSQL.\n#\n# Mandatory: no\n# Default:\n# DBHost=localhost\nDBHost=127.0.0.1\n\n### Option: DBName\n#       Database name.\n#       For SQLite3 path to database file must be provided. DBUser and DBPassword are ignored.\n#\n# Mandatory: yes\n# Default:\n# DBName=\n\nDBName=zabbix\n\n### Option: DBSchema\n#       Schema name. Used for IBM DB2 and PostgreSQL.\n#\n# Mandatory: no\n# Default:\n# DBSchema=\n\n### Option: DBUser\n#       Database user. Ignored for SQLite.\n#\n# Mandatory: no\n# Default:\n# DBUser=\nDBUser={{(getContext . \"MARIADB_USER\")}}\n\n### Option: DBPassword\n#       Database password. Ignored for SQLite.\n#       Comment this line if no password is used.\n#\n# Mandatory: no\n# Default:\n# DBPassword=\nDBPassword={{(getContext . \"MARIADB_PASS\")}}\n\n### Option: DBSocket\n#       Path to MySQL socket.\n#\n# Mandatory: no\n# Default:\n# DBSocket=/tmp/mysql.sock\n\n### Option: DBPort\n#       Database port when not using local socket. Ignored for SQLite.\n#\n# Mandatory: no\n# Range: 1024-65535\n# Default (for MySQL):\n# DBPort=3306\n\n############ ADVANCED PARAMETERS ################\n\n### Option: StartPollers\n#       Number of pre-forked instances of pollers.\n#\n# Mandatory: no\n# Range: 0-1000\n# Default:\n# StartPollers=5\n\n### Option: StartIPMIPollers\n#       Number of pre-forked instances of IPMI pollers.\n#\n# Mandatory: no\n# Range: 0-1000\n# Default:\n# StartIPMIPollers=0\n\n### Option: StartPollersUnreachable\n#       Number of pre-forked instances of pollers for unreachable hosts (including IPMI and Java).\n#       At least one poller for unreachable hosts must be running if regular, IPMI or Java pollers\n#       are started.\n#\n# Mandatory: no\n# Range: 0-1000\n# Default:\n# StartPollersUnreachable=1\n\n### Option: StartTrappers\n#       Number of pre-forked instances of trappers.\n#       Trappers accept incoming connections from Zabbix sender, active agents and active proxies.\n#       At least one trapper process must be running to display server availability and view queue\n#       in the frontend.\n#\n# Mandatory: no\n# Range: 0-1000\n# Default:\n# StartTrappers=5\n\n### Option: StartPingers\n#       Number of pre-forked instances of ICMP pingers.\n#\n# Mandatory: no\n# Range: 0-1000\n# Default:\n# StartPingers=1\n\n### Option: StartDiscoverers\n#       Number of pre-forked instances of discoverers.\n#\n# Mandatory: no\n# Range: 0-250\n# Default:\n# StartDiscoverers=1\n\n### Option: StartHTTPPollers\n#       Number of pre-forked instances of HTTP pollers.\n#\n# Mandatory: no\n# Range: 0-1000\n# Default:\n# StartHTTPPollers=1\n\n### Option: StartTimers\n#       Number of pre-forked instances of timers.\n#       Timers process time-based trigger functions and maintenance periods.\n#       Only the first timer process handles the maintenance periods.\n#\n# Mandatory: no\n# Range: 1-1000\n# Default:\n# StartTimers=1\n\n### Option: JavaGateway\n#       IP address (or hostname) of Zabbix Java gateway.\n#       Only required if Java pollers are started.\n#\n# Mandatory: no\n# Default:\n# JavaGateway=\n\n### Option: JavaGatewayPort\n#       Port that Zabbix Java gateway listens on.\n#\n# Mandatory: no\n# Range: 1024-32767\n# Default:\n# JavaGatewayPort=10052\n\n### Option: StartJavaPollers\n#       Number of pre-forked instances of Java pollers.\n#\n# Mandatory: no\n# Range: 0-1000\n# Default:\n# StartJavaPollers=0\n\n### Option: StartVMwareCollectors\n#       Number of pre-forked vmware collector instances.\n#\n# Mandatory: no\n# Range: 0-250\n# Default:\n# StartVMwareCollectors=0\n\n### Option: VMwareFrequency\n#       How often Zabbix will connect to VMware service to obtain a new data.\n#\n# Mandatory: no\n# Range: 10-86400\n# Default:\n# VMwareFrequency=60\n\n### Option: VMwarePerfFrequency\n#       How often Zabbix will connect to VMware service to obtain performance data.\n#\n# Mandatory: no\n# Range: 10-86400\n# Default:\n# VMwarePerfFrequency=60\n\n### Option: VMwareCacheSize\n#       Size of VMware cache, in bytes.\n#       Shared memory size for storing VMware data.\n#       Only used if VMware collectors are started.\n#\n# Mandatory: no\n# Range: 256K-2G\n# Default:\n# VMwareCacheSize=8M\n\n### Option: VMwareTimeout\n#       Specifies how many seconds vmware collector waits for response from VMware service.\n#\n# Mandatory: no\n# Range: 1-300\n# Default:\n# VMwareTimeout=10\n\n### Option: SNMPTrapperFile\n#       Temporary file used for passing data from SNMP trap daemon to the server.\n#       Must be the same as in zabbix_trap_receiver.pl or SNMPTT configuration file.\n#\n# Mandatory: no\n# Default:\n# SNMPTrapperFile=/tmp/zabbix_traps.tmp\n\n### Option: StartSNMPTrapper\n#       If 1, SNMP trapper process is started.\n#\n# Mandatory: no\n# Range: 0-1\n# Default:\n# StartSNMPTrapper=0\n\n### Option: ListenIP\n#       List of comma delimited IP addresses that the trapper should listen on.\n#       Trapper will listen on all network interfaces if this parameter is missing.\n#\n# Mandatory: no\n# Default:\n# ListenIP=0.0.0.0\n\n# ListenIP=127.0.0.1\n\n### Option: HousekeepingFrequency\n#       How often Zabbix will perform housekeeping procedure (in hours).\n#       Housekeeping is removing outdated information from the database.\n#       To prevent Housekeeper from being overloaded, no more than 4 times HousekeepingFrequency\n#       hours of outdated information are deleted in one housekeeping cycle, for each item.\n#       To lower load on server startup housekeeping is postponed for 30 minutes after server start.\n#\n# Mandatory: no\n# Range: 1-24\n# Default:\n# HousekeepingFrequency=1\n\n### Option: MaxHousekeeperDelete\n#       The table \"housekeeper\" contains \"tasks\" for housekeeping procedure in the format:\n#       [housekeeperid], [tablename], [field], [value].\n#       No more than 'MaxHousekeeperDelete' rows (corresponding to [tablename], [field], [value])\n#       will be deleted per one task in one housekeeping cycle.\n#       SQLite3 does not use this parameter, deletes all corresponding rows without a limit.\n#       If set to 0 then no limit is used at all. In this case you must know what you are doing!\n#\n# Mandatory: no\n# Range: 0-1000000\n# Default:\n# MaxHousekeeperDelete=500\n\n### Option: SenderFrequency\n#       How often Zabbix will try to send unsent alerts (in seconds).\n#\n# Mandatory: no\n# Range: 5-3600\n# Default:\n# SenderFrequency=30\n\n### Option: CacheSize\n#       Size of configuration cache, in bytes.\n#       Shared memory size for storing host, item and trigger data.\n#\n# Mandatory: no\n# Range: 128K-8G\n# Default:\n# CacheSize=8M\n\n### Option: CacheUpdateFrequency\n#       How often Zabbix will perform update of configuration cache, in seconds.\n#\n# Mandatory: no\n# Range: 1-3600\n# Default:\n# CacheUpdateFrequency=60\n\n### Option: StartDBSyncers\n#       Number of pre-forked instances of DB Syncers\n#\n# Mandatory: no\n# Range: 1-100\n# Default:\n# StartDBSyncers=4\n\n### Option: HistoryCacheSize\n#       Size of history cache, in bytes.\n#       Shared memory size for storing history data.\n#\n# Mandatory: no\n# Range: 128K-2G\n# Default:\n# HistoryCacheSize=8M\n\n### Option: TrendCacheSize\n#       Size of trend cache, in bytes.\n#       Shared memory size for storing trends data.\n#\n# Mandatory: no\n# Range: 128K-2G\n# Default:\n# TrendCacheSize=4M\n\n### Option: HistoryTextCacheSize\n#       Size of text history cache, in bytes.\n#       Shared memory size for storing character, text or log history data.\n#\n# Mandatory: no\n# Range: 128K-2G\n# Default:\n# HistoryTextCacheSize=16M\n\n### Option: ValueCacheSize\n#       Size of history value cache, in bytes.\n#       Shared memory size for caching item history data requests.\n#       Setting to 0 disables value cache.\n#\n# Mandatory: no\n# Range: 0,128K-64G\n# Default:\n# ValueCacheSize=8M\n\n### Option: Timeout\n#       Specifies how long we wait for agent, SNMP device or external check (in seconds).\n#\n# Mandatory: no\n# Range: 1-30\n# Default:\n# Timeout=3\n\n### Option: TrapperTimeout\n#       Specifies how many seconds trapper may spend processing new data.\n#\n# Mandatory: no\n# Range: 1-300\n# Default:\n# TrapperTimeout=300\n\n### Option: UnreachablePeriod\n#       After how many seconds of unreachability treat a host as unavailable.\n#\n# Mandatory: no\n# Range: 1-3600\n# Default:\n# UnreachablePeriod=45\n\n### Option: UnavailableDelay\n#       How often host is checked for availability during the unavailability period, in seconds.\n#\n# Mandatory: no\n# Range: 1-3600\n# Default:\n# UnavailableDelay=60\n\n### Option: UnreachableDelay\n#       How often host is checked for availability during the unreachability period, in seconds.\n#\n# Mandatory: no\n# Range: 1-3600\n# Default:\n# UnreachableDelay=15\n\n### Option: AlertScriptsPath\n#       Full path to location of custom alert scripts.\n#       Default depends on compilation options.\n#\n# Mandatory: no\n# Default:\n# AlertScriptsPath=${datadir}/zabbix/alertscripts\n\n### Option: ExternalScripts\n#       Full path to location of external scripts.\n#       Default depends on compilation options.\n#\n# Mandatory: no\n# Default:\n# ExternalScripts=${datadir}/zabbix/externalscripts\n\n### Option: FpingLocation\n#       Location of fping.\n#       Make sure that fping binary has root ownership and SUID flag set.\n#\n# Mandatory: no\n# Default:\n# FpingLocation=/usr/sbin/fping\n\n### Option: Fping6Location\n#       Location of fping6.\n#       Make sure that fping6 binary has root ownership and SUID flag set.\n#       Make empty if your fping utility is capable to process IPv6 addresses.\n#\n# Mandatory: no\n# Default:\n# Fping6Location=/usr/sbin/fping6\n\n### Option: SSHKeyLocation\n#       Location of public and private keys for SSH checks and actions.\n#\n# Mandatory: no\n# Default:\n# SSHKeyLocation=\n\n### Option: LogSlowQueries\n#       How long a database query may take before being logged (in milliseconds).\n#       Only works if DebugLevel set to 3 or 4.\n#       0 - don't log slow queries.\n#\n# Mandatory: no\n# Range: 1-3600000\n# Default:\n# LogSlowQueries=0\n\n### Option: TmpDir\n#       Temporary directory.\n#\n# Mandatory: no\n# Default:\n# TmpDir=/tmp\n\n### Option: StartProxyPollers\n#       Number of pre-forked instances of pollers for passive proxies.\n#\n# Mandatory: no\n# Range: 0-250\n# Default:\n# StartProxyPollers=1\n\n### Option: ProxyConfigFrequency\n#       How often Zabbix Server sends configuration data to a Zabbix Proxy in seconds.\n#       This parameter is used only for proxies in the passive mode.\n#\n# Mandatory: no\n# Range: 1-3600*24*7\n# Default:\n# ProxyConfigFrequency=3600\n\n### Option: ProxyDataFrequency\n#       How often Zabbix Server requests history data from a Zabbix Proxy in seconds.\n#       This parameter is used only for proxies in the passive mode.\n#\n# Mandatory: no\n# Range: 1-3600\n# Default:\n# ProxyDataFrequency=1\n\n### Option: AllowRoot\n#       Allow the server to run as 'root'. If disabled and the server is started by 'root', the server\n#       will try to switch to the user specified by the User configuration option instead.\n#       Has no effect if started under a regular user.\n#       0 - do not allow\n#       1 - allow\n#\n# Mandatory: no\n# Default:\n# AllowRoot=0\n\n### Option: User\n#       Drop privileges to a specific, existing user on the system.\n#       Only has effect if run as 'root' and AllowRoot is disabled.\n#\n# Mandatory: no\n# Default:\n# User=zabbix\n\n### Option: Include\n#       You may include individual files or all files in a directory in the configuration file.\n#       Installing Zabbix will create include directory in /usr/local/etc, unless modified during the compile time.\n#\n# Mandatory: no\n# Default:\n# Include=\n\n# Include=/usr/local/etc/zabbix_server.general.conf\n# Include=/usr/local/etc/zabbix_server.conf.d/\n# Include=/usr/local/etc/zabbix_server.conf.d/*.conf\n\n### Option: SSLCertLocation\n#       Location of SSL client certificates.\n#       This parameter is used only in web monitoring.\n#\n# Mandatory: no\n# Default:\n# SSLCertLocation=${datadir}/zabbix/ssl/certs\n\n### Option: SSLKeyLocation\n#       Location of private keys for SSL client certificates.\n#       This parameter is used only in web monitoring.\n#\n# Mandatory: no\n# Default:\n# SSLKeyLocation=${datadir}/zabbix/ssl/keys\n\n### Option: SSLCALocation\n#       Override the location of certificate authority (CA) files for SSL server certificate verification.\n#       If not set, system-wide directory will be used.\n#       This parameter is used only in web monitoring.\n#\n# Mandatory: no\n# Default:\n# SSLCALocation=\n\n####### LOADABLE MODULES #######\n\n### Option: LoadModulePath\n#       Full path to location of server modules.\n#       Default depends on compilation options.\n#\n# Mandatory: no\n# Default:\n# LoadModulePath=${libdir}/modules\n\n### Option: LoadModule\n#       Module to load at server startup. Modules are used to extend functionality of the server.\n#       Format: LoadModule=<module.so>\n#       The modules must be located in directory specified by LoadModulePath.\n#       It is allowed to include multiple LoadModule parameters.\n#\n# Mandatory: no\n# Default:\n# LoadModule=\n"
+         }
+       },       
+       "Context": {
+         "MARIADB_USER": "zabbix",
+         "MARIADB_PASS": "RXzQcZ4cqaUFEB7K"       
+       },
+       "Endpoints": [
+         {
+           "Name": "zabbix-web",
+           "Purpose": "export",
+           "Protocol": "tcp",
+           "PortNumber": 80,
+           "PortTemplate": "",
+           "VirtualAddress": "",
+           "Application": "Zabbix",
+           "ApplicationTemplate": "",
+           "AddressConfig": {
+             "Port": 0,
+             "Protocol": ""
+           },
+           "VHosts": [
+             "zabbix"
+           ]
+         },
+         {
+           "Name": "zabbix-server",
+           "Purpose": "export",
+           "Protocol": "tcp",
+           "PortNumber": 10051,
+           "PortTemplate": "",
+           "VirtualAddress": "",
+           "Application": "Zabbix",
+           "ApplicationTemplate": "",
+           "AddressConfig": {
+             "Port": 0,
+             "Protocol": ""
+           },
+           "VHosts": null
+         },
+         {
+           "Name": "zabbix-db",
+           "Purpose": "import",
+           "Protocol": "tcp",
+           "PortNumber": 3306,
+           "PortTemplate": "",
+           "VirtualAddress": "",
+           "Application": "zabbix-db",
+           "ApplicationTemplate": "",
+           "AddressConfig": {
+             "Port": 0,
+             "Protocol": ""
+           },
+           "VHosts": null
+         }                                    
+       ],
+       "Services": [
+             {
+               "Name": "ZabbixDB",
+               "Title": "",
+               "Version": "",
+               "Command": "/zabbix-db-mariadb.sh",
+               "Description": "Zabbix Database MariaDB",
+               "Tags": [
+                 "daemon"
+               ],
+               "ImageID": "multiplay/zabbix-db-mariadb",
+               "Instances": {
+                 "Min": 1,
+                 "Max": 1,
+                 "Default": 0
+               },
+               "ChangeOptions": null,
+               "Launch": "auto",
+               "HostPolicy": "",
+               "Hostname": "localhost",
+               "Privileged": true,
+               "ConfigFiles": {
+                 "/zabbix-db-mariadb.sh": {
+                   "Filename": "/zabbix-db-mariadb.sh",
+                   "Owner": "root:root",
+                   "Permissions": "0775",
+                   "Content": "export MARIADB_USER={{(getContext . \"MARIADB_USER\")}}\nexport MARIADB_PASS={{(getContext . \"MARIADB_PASS\")}}\n/run.sh\n"
+                 },               
+                 "/etc/my.cnf.d/tuning.cnf": {
+                   "Filename": "/etc/my.cnf.d/tuning.cnf",
+                   "Owner": "root:root",
+                   "Permissions": "0775",
+                   "Content": "################################################################################\n#\n# Jan Garaj www.monitoringartist.com\n#\n################################################################################\n\n# https://www.percona.com/blog/2014/11/14/optimizing-mysql-zabbix/\n\n[mysqld]\nmax_allowed_packet = 16\n\n# Sort buffer is used to perform sorts for some ORDER BY and GROUP BY\n# queries. If sorted data does not fit into the sort buffer, a disk\n# based merge sort is used instead - See the Sort_merge_passes\n# status variable. Allocated per thread if sort is needed.\n# sort_buffer_size = 16M\n\n# Size of the buffer used for doing full table scans.\n# Allocated per thread, if a full scan is needed.\n# read_buffer_size = 1M\n\n# When reading rows in sorted order after a sort, the rows are read\n# through this buffer to avoid disk seeks. You can improve ORDER BY\n# performance a lot, if set this to a high value.\n# Allocated per thread, when needed.\n# read_rnd_buffer_size = 8M\n# join_buffer_size = 1M\n\n## Generally, it is unwise to set the query cache to be larger than 64-128M\n## as the costs associated with maintaining the cache outweigh the performance\n## gains.\n## The query cache is a well known bottleneck that can be seen even when\n## concurrency is moderate. The best option is to disable it from day 1\n## by setting query_cache_size = 0 (now the default on MySQL 5.6)\n## and to use other ways to speed up read queries: good indexing, adding\n## replicas to spread the read load or using an external cache.\nquery_cache_size  = 0\nquery_cache_type = 0\n\nsync_binlog = 0\nthread_cache_size = 16\ntable_open_cache = 2048\ntable_definition_cache = 1024\n\n#\n# InnoDB\n#\n# The buffer pool is where data and indexes are cached: having it as large as possible\n# will ensure you use memory and not disks for most read operations.\n# Typical values are 50..75% of available RAM.\ninnodb_buffer_pool_size = 768M # 75% of 1GB RAM\ninnodb_log_file_size = 128M\ninnodb_flush_method = O_DIRECT\ninnodb_old_blocks_time = 1000\n\n# The default setting of 1 means that InnoDB is fully ACID compliant.\n# It is the best value when your primary concern is data safety, for instance on a master.\n# However it can have a significant overhead on systems with slow disks because of the\n# extra fsyncs that are needed to flush each change to the redo logs.\n# Setting it to 2 is a bit less reliable because committed transactions will be\n# flushed to the redo logs only once a second, but that can be acceptable on some situations\n# for a master and that is definitely a good value for a replica. 0 is even faster\n# but you are more likely to lose some data in case of a crash: it is only a good value for a replica.\ninnodb_flush_log_at_trx_commit = 0\n\n[mysqldump]\nmax-allowed-packet = 16M"
+                 }
+               },
+               "Context": null,
+               "Endpoints": [
+                 {
+                   "Name": "zabbix-db",
+                   "Purpose": "export",
+                   "Protocol": "tcp",
+                   "PortNumber": 3306,
+                   "PortTemplate": "",
+                   "VirtualAddress": "",
+                   "Application": "zabbix-db",
+                   "ApplicationTemplate": "",
+                   "AddressConfig": {
+                     "Port": 0,
+                     "Protocol": ""
+                   },
+                   "VHosts": null
+                 }
+               ],
+               "Services": [],
+               "Tasks": null,
+               "LogFilters": null,
+               "Volumes": [
+                 {
+                   "Owner": "root:root",
+                   "Permission": "0755",
+                   "ResourcePath": "zabbix-db-mariad-storage",
+                   "ContainerPath": "/var/lib/mysql",
+                   "Type": ""
+                 }
+               ],
+               "LogConfigs": [
+                 {
+                   "Path": "/var/log/mariadb_error.log",
+                   "Type": "mariadb",
+                   "Filters": null,
+                   "LogTags": null
+                 }
+               ],
+               "Snapshot": {
+                 "Pause": "",
+                 "Resume": ""
+               },
+               "RAMCommitment": "1G",
+               "CPUCommitment": 1,
+               "Runs": null,
+               "Actions": null,
+               "HealthChecks": {
+                 "answering": {
+                   "Script": "mysql --protocol TCP -uroot -hlocalhost -P3306 -e 'select 1' \u003e /dev/null",
+                   "Interval": 5,
+                   "Timeout": 0
+                 }
+               },
+               "Prereqs": null,
+               "MonitoringProfile": {
+                 "MetricConfigs": null,
+                 "GraphConfigs": null,
+                 "ThresholdConfigs": null
+               },
+               "MemoryLimit": 0,
+               "CPUShares": 0,
+               "PIDFile": ""
+             }       
+       ],
+       "Tasks": null,
+       "LogFilters": null,
+       "Volumes": null,
+       "LogConfigs": [
+         {
+           "Path": "/var/log/zabbix/zabbix_server.log",
+           "Type": "grafana",
+           "Filters": null,
+           "LogTags": null
+         }
+       ],
+       "Snapshot": {
+         "Pause": "",
+         "Resume": ""
+       },
+       "RAMCommitment": "512M",
+       "CPUCommitment": 1,
+       "Runs": null,
+       "Actions": null,
+       "HealthChecks": {
+         "web answering": {
+           "Script": "curl -f -s http://localhost:80/ \u003e /dev/null",
+           "Interval": 30,
+           "Timeout": 5
+         },
+         "zabbix server answering": {
+           "Script": "curl -f -s http://localhost:10051/ \u003e /dev/null",
+           "Interval": 30,
+           "Timeout": 5
+         }                
+       },
+       "Prereqs": [
+         {
+           "Name": "zabbix-db connectivity",
+           "Script": "export TERM=xterm; mysql --host=127.0.0.1 --port=3306 -c ';' 2\u003e\u00261 | grep denied"
+         }
+       ],
+       "MonitoringProfile": {
+         "MetricConfigs": null,
+         "GraphConfigs": null,
+         "ThresholdConfigs": null
+       },
+       "MemoryLimit": 0,
+       "CPUShares": 0,
+       "PIDFile": ""
+     }
+   ],
+   "ConfigFiles": null,
+   "ServicedVersion": {
+     "Version": "0.10.0",
+     "Date": "Mon Nov 24 17:40:37 UTC 2014",
+     "Gitbranch": "master",
+     "Gitcommit": "e80a617",
+     "Giturl": "",
+     "Buildtag": "0"
+   },
+   "TemplateVersion": {
+     "branch": "unknown",
+     "commit": "unknown",
+     "repo": "unknown",
+     "tag": "unknown"
+   }
+}
