@@ -14,6 +14,7 @@ Installation
 - Deploy Zabbix Application
 - Start and use it, note: first start can take 2-3 minutes, because default 
 database must be imported
+- Default Zabbix credentials: Admin/zabbix
 
 Known issues
 ============
