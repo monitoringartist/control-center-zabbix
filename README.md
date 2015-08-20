@@ -2,7 +2,7 @@ Zabbix server Control Center template
 =====================================
 
 [Dockerized Zabbix Server 2.4](https://github.com/zabbix/zabbix-community-docker/) 
-template for [Zenoss Control Center](http://controlcenter.io/)
+template for [Zenoss Control Center](http://controlcenter.io/) (Docker orchestration tool)
 
 [![Paypal donate button](http://jangaraj.com/img/github-donate-button02.png)]
 (https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8LB6J222WRUZ4)
@@ -14,7 +14,7 @@ Installation
 - Deploy Zabbix Application
 - Start and use it, note: first start can take 2-3 minutes, because default 
 database must be imported
-- Default Zabbix credentials: Admin/zabbix
+- Default Zabbix web credentials: Admin/zabbix
 
 Known issues
 ============
