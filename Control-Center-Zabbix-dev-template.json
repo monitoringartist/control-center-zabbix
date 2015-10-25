@@ -8,12 +8,12 @@
        "Name": "Zabbix",
        "Title": "Zabbix",
        "Version": "dev",
-       "Command": "/zabbix-server-2.4.sh",
+       "Command": "/zabbix-server-3.0.sh",
        "Description": "Zabbix dev / customized by www.monitoringartist.com",
        "Tags": [
          "daemon"
        ],
-       "ImageID": "jangaraj/zabbix-server-2.4:dev",
+       "ImageID": "zabbix/zabbix-server-3.0:dev",
        "Instances": {
          "Min": 1,
          "Max": 1,
@@ -25,8 +25,8 @@
        "Hostname": "",
        "Privileged": false,
        "ConfigFiles": {
-         "/zabbix-server-2.4.sh": {
-           "Filename": "/zabbix-server-2.4.sh",
+         "/zabbix-server-3.0.sh": {
+           "Filename": "/zabbix-server-3.0.sh",
            "Owner": "root:root",
            "Permissions": "0775",
            "Content": "export ZS_DBHost=127.0.0.1\nexport ZS_DBUser={{(getContext . \"MARIADB_USER\")}}\nexport ZS_DBPassword={{(getContext . \"MARIADB_PASS\")}}\n. /config/bootstrap.sh\n"
