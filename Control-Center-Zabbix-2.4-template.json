@@ -107,7 +107,7 @@
                "Tags": [
                  "daemon"
                ],
-               "ImageID": "jangaraj/zabbix-db-mariadb",
+               "ImageID": "zabbix/zabbix-db-mariadb",
                "Instances": {
                  "Min": 1,
                  "Max": 1,

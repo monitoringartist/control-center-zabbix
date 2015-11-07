@@ -19,7 +19,7 @@ database must be imported
 Known issues
 ============
 
-- Defined health checks are failing
+- health checks are failing
 
 Author
 ======
