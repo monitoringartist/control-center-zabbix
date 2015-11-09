@@ -21,6 +21,18 @@ Known issues
 
 - health checks are failing
 
+Troubleshooting
+===============
+
+Check if app is running:
+
+```
+[ccuser@ccmaster]  curl -sk --header 'Host: zabbix.local' 'https://127.0.0.1:443' | grep 'by Zabbix SIA'
+                                                                Zabbix 2.4.6 (2015-11-03) Copyright 2001-2015 by Zabbix SIA
+```
+
+If you can see this output in command line '*by Zabbix SIA' and you are not able to see app in your browser, then you have some problem with DNS records/hosts file.
+
 Author
 ======
 
