@@ -27,7 +27,7 @@ Troubleshooting
 Check if app is running:
 
 ```
-[ccuser@ccmaster] curl -sk --header 'Host: zabbix.local' 'https://127.0.0.1:443' | grep 'by Zabbix SIA'
+[ccuser@ccmaster]# curl -sk --header 'Host: zabbix.local' 'https://127.0.0.1:443' | grep 'by Zabbix SIA'
                   Zabbix 2.4.6 (2015-11-03) Copyright 2001-2015 by Zabbix SIA
 ```
 
