@@ -1,15 +1,15 @@
 {
    "ID": "",
    "Name": "Zabbix",
-   "Version": "dev",
-   "Description": "Zabbix dev / customized by www.monitoringartist.com",
+   "Version": "3.0",
+   "Description": "Zabbix 3.0 / customized by www.monitoringartist.com",
    "Services": [
      {
        "Name": "Zabbix",
        "Title": "Zabbix",
-       "Version": "dev",
+       "Version": "3.0",
        "Command": "/zabbix-server-3.0.sh",
-       "Description": "Zabbix dev / customized by www.monitoringartist.com",
+       "Description": "Zabbix 3.0 / customized by www.monitoringartist.com",
        "Tags": [
          "daemon"
        ],
