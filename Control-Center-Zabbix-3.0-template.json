@@ -13,7 +13,7 @@
        "Tags": [
          "daemon"
        ],
-       "ImageID": "zabbix/zabbix-server-3.0:dev",
+       "ImageID": "zabbix/zabbix-3.0:latest",
        "Instances": {
          "Min": 1,
          "Max": 1,
